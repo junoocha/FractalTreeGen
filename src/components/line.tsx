@@ -17,12 +17,13 @@ export default function Line({
 }: LineProps) {
 	return (
 		<div
-			className="absolute origin-bottom"
+			className="absolute"
 			style={{
-				height: `${length}px`,
 				width: `${width}px`,
+				height: `${length}px`,
 				backgroundColor: color,
-				transform: `rotate(${angle}deg)`,
+				transform: `translateX(-50%) rotate(${angle}deg)`,
+				transformOrigin: "bottom center",
 				...style,
 			}}
 		/>
