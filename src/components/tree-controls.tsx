@@ -19,12 +19,14 @@ export default function TreeControls() {
 	const [isAnimating, setIsAnimating] = useState(false);
 	const [currentLevel, setCurrentLevel] = useState(0);
 	const [appliedSettings, setAppliedSettings] = useState(settings);
+	const isFinished = currentLevel >= appliedSettings.maxLevel;
 
-	const update = (key: keyof typeof settings, delta: number) => {
-		setSettings((prev) => ({
-			...prev,
-			[key]: Math.max(0, Number(prev[key]) + delta),
-		}));
+	const update = (key: keyof typeof settings, delta: number, minValue = 1) => {
+		setSettings((prev) => {
+			const raw = Number((prev[key] as number) + delta);
+			const next = Math.max(minValue, parseFloat(raw.toFixed?.(2)));
+			return { ...prev, [key]: next };
+		});
 	};
 
 	return (
@@ -34,20 +36,22 @@ export default function TreeControls() {
 				<h2 className="text-lg font-bold mb-4">Tree Controls</h2>
 
 				{[
-					["Max Levels", "maxLevel", 1],
-					["Branches Per Level", "branchesPerLevel", 1],
-					["Initial Length", "initialLength", 5],
-					["Branch Width", "initialWidth", 1],
-					["Branch Angle", "branchAngle", 5],
-					["Scale Factor", "scale", 0.05],
-					["Leaf Size", "leafSize", 1],
-					["Frame Rate (ms)", "frameRate", 50],
-				].map(([label, key, step]) => (
+					["Max Levels", "maxLevel", 1, 1],
+					["Branches Per Level", "branchesPerLevel", 1, 1],
+					["Initial Length", "initialLength", 10, 1],
+					["Branch Width", "initialWidth", 1, 1],
+					["Branch Angle", "branchAngle", 5, 0],
+					["Scale Factor", "scale", 0.05, 0.01],
+					["Leaf Size", "leafSize", 1, 0],
+					["Frame Rate (ms)", "frameRate", 50, 10],
+				].map(([label, key, step, min]) => (
 					<div key={key} className="mb-3">
 						<label className="block mb-1 font-medium">{label}</label>
 						<div className="flex items-center gap-2">
 							<button
-								onClick={() => update(key as any, -(step as number))}
+								onClick={() =>
+									update(key as any, -(step as number), min as number)
+								}
 								className="px-2 py-1 border rounded"
 							>
 								–
@@ -55,16 +59,21 @@ export default function TreeControls() {
 							<input
 								type="number"
 								className="border rounded px-2 py-1 w-full"
+								min={min as number}
+								step={step as number}
 								value={settings[key as keyof typeof settings] as number}
-								onChange={(e) =>
-									setSettings((prev) => ({
-										...prev,
-										[key]: Number(e.target.value),
-									}))
-								}
+								onChange={(e) => {
+									const val = Math.max(
+										Number(min),
+										parseFloat(e.target.value || "0"),
+									);
+									setSettings((prev) => ({ ...prev, [key]: val }));
+								}}
 							/>
 							<button
-								onClick={() => update(key as any, step as number)}
+								onClick={() =>
+									update(key as any, step as number, min as number)
+								}
 								className="px-2 py-1 border rounded"
 							>
 								+
@@ -88,14 +97,17 @@ export default function TreeControls() {
 				<div className="flex gap-4 mt-4">
 					<button
 						onClick={() => {
-							if (!isAnimating) {
-								setAppliedSettings(settings); // Apply new settings only when starting
+							if (!isAnimating && !isFinished && currentLevel === 0) {
+								setAppliedSettings(settings);
 							}
-							setIsAnimating(!isAnimating); // Toggle pause/start properly
+							if (!isFinished) {
+								setIsAnimating(!isAnimating);
+							}
 						}}
-						className="bg-green-600 text-white px-4 py-2 rounded"
+						className="bg-green-600 text-white px-4 py-2 rounded disabled:opacity-50"
+						disabled={isFinished}
 					>
-						{isAnimating ? "Pause" : "Start"}
+						{isFinished ? "Finished" : isAnimating ? "Pause" : "Start"}
 					</button>
 					<button
 						onClick={() => {

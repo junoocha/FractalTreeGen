@@ -180,7 +180,10 @@ export default function Branch({
 				))}
 			{/* recursively render child branches */}
 			{children.map((child, i) => (
-				<Branch key={`${curLevel}-${i}`} {...child} />
+				<Branch
+					key={`${child.curLevel}-${child.angle}-${child.x}-${child.y}-${i}`}
+					{...child}
+				/>
 			))}
 		</>
 	);
