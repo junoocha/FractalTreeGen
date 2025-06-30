@@ -1,9 +1,9 @@
-import Tree from "@/components/tree";
+import TreeWindow from "@/components/tree-window";
 
 export default function Home() {
 	return (
-		<main className="w-screen h-screen">
-			<Tree />
+		<main>
+			<TreeWindow />
 		</main>
 	);
 }
