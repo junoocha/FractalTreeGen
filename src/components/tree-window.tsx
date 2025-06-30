@@ -1,13 +1,52 @@
 "use client";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Tree from "./tree";
 
-export default function TreeWindow() {
+export type TreeSettings = {
+	branchesPerLevel: number;
+	initialLength: number;
+	initialWidth: number;
+	branchAngle: number;
+	scale: number;
+	leafSize: number;
+	leafColor: string;
+	frameRate: number;
+	maxLevel: number;
+};
+
+export default function TreeWindow({
+	settings,
+	isAnimating,
+	currentLevel,
+	setCurrentLevel,
+}: {
+	settings: TreeSettings;
+	isAnimating: boolean;
+	currentLevel: number;
+	setCurrentLevel: (v: number) => void;
+}) {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const [scale, setScale] = useState(1);
 	const [offset, setOffset] = useState({ x: 0, y: 0 });
 	const [dragging, setDragging] = useState(false);
 	const [start, setStart] = useState<{ x: number; y: number } | null>(null);
+
+	useEffect(() => {
+		if (!isAnimating) return;
+
+		const interval = setInterval(() => {
+			setCurrentLevel((prev) => {
+				if (prev >= settings.maxLevel) {
+					clearInterval(interval); // stop if max reached
+					return prev;
+				}
+				return prev + 1;
+			});
+		}, settings.frameRate);
+
+		// Clean up interval on pause or unmount
+		return () => clearInterval(interval);
+	}, [isAnimating, settings.frameRate, settings.maxLevel]);
 
 	const handleWheel = (e: React.WheelEvent) => {
 		e.preventDefault();
@@ -34,28 +73,26 @@ export default function TreeWindow() {
 	};
 
 	return (
-		<div className="w-full h-screen flex items-center justify-center bg-gray-100">
+		<div
+			ref={containerRef}
+			onWheel={handleWheel}
+			onMouseDown={handleMouseDown}
+			onMouseMove={handleMouseMove}
+			onMouseUp={handleMouseUp}
+			onMouseLeave={handleMouseUp}
+			className="relative w-full h-full overflow-hidden bg-[#eef6ec] cursor-grab"
+			style={{ userSelect: "none" }}
+		>
 			<div
-				ref={containerRef}
-				onWheel={handleWheel}
-				onMouseDown={handleMouseDown}
-				onMouseMove={handleMouseMove}
-				onMouseUp={handleMouseUp}
-				onMouseLeave={handleMouseUp}
-				className="relative w-[800px] h-[600px] overflow-hidden border border-gray-400 rounded-lg bg-white cursor-grab"
-				style={{ userSelect: "none" }}
+				style={{
+					transform: `translate(${offset.x}px, ${offset.y}px) scale(${scale})`,
+					transformOrigin: "center center",
+					width: "100%",
+					height: "100%",
+					position: "relative",
+				}}
 			>
-				<div
-					style={{
-						transform: `translate(${offset.x}px, ${offset.y}px) scale(${scale})`,
-						transformOrigin: "center center",
-						width: "100%",
-						height: "100%",
-						position: "relative",
-					}}
-				>
-					<Tree />
-				</div>
+				<Tree currentAnimationLevel={currentLevel} {...settings} />
 			</div>
 		</div>
 	);

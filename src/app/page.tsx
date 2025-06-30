@@ -1,9 +1,9 @@
-import TreeWindow from "@/components/tree-window";
+import TreeControls from "@/components/tree-controls";
 
 export default function Home() {
 	return (
-		<main>
-			<TreeWindow />
+		<main className="w-full h-screen overflow-hidden">
+			<TreeControls />
 		</main>
 	);
 }
