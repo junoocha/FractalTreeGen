@@ -166,7 +166,7 @@ export default function TreeControls() {
         <div
           className={`p-3 bg-gray-100 rounded shadow text-center font-semibold ${branchCountClass}`}
         >
-          Total Branches: {totalBranches.toLocaleString()}
+          Expected Branches With Given Input: {totalBranches.toLocaleString()}
         </div>
 
         <div
