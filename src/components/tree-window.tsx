@@ -29,7 +29,7 @@ export default function TreeWindow({
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
-  const [offset, setOffset] = useState({ x: 350, y: 0 });
+  const [offset, setOffset] = useState({ x: 600, y: 100 });
   const [dragging, setDragging] = useState(false);
   const [start, setStart] = useState<{ x: number; y: number } | null>(null);
 
