@@ -20,6 +20,7 @@ export default function TreeControls() {
   const [currentLevel, setCurrentLevel] = useState(0);
   const [appliedSettings, setAppliedSettings] = useState(settings);
   const isFinished = currentLevel >= appliedSettings.maxLevel;
+  const [lineCount, setLineCount] = useState(0);
 
   const update = (key: keyof typeof settings, delta: number, minValue = 1) => {
     setSettings((prev) => {
@@ -119,6 +120,10 @@ export default function TreeControls() {
             Reset
           </button>
         </div>
+
+        <div className="mt-6 p-3 bg-gray-100 rounded shadow text-center font-semibold">
+          Lines Drawn: {Math.floor(lineCount) / 2}
+        </div>
       </div>
 
       {/* Tree Viewer */}
@@ -128,6 +133,7 @@ export default function TreeControls() {
           isAnimating={isAnimating}
           currentLevel={currentLevel}
           setCurrentLevel={setCurrentLevel}
+          setLineCount={setLineCount}
         />
       </div>
     </div>

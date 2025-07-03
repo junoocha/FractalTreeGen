@@ -19,19 +19,19 @@ export default function TreeWindow({
   isAnimating,
   currentLevel,
   setCurrentLevel,
+  setLineCount,
 }: {
   settings: TreeSettings;
   isAnimating: boolean;
   currentLevel: number;
   setCurrentLevel: (v: number | ((prev: number) => number)) => void;
+  setLineCount: React.Dispatch<React.SetStateAction<number>>;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
   const [offset, setOffset] = useState({ x: 350, y: 0 });
   const [dragging, setDragging] = useState(false);
   const [start, setStart] = useState<{ x: number; y: number } | null>(null);
-  const lineCounterRef = useRef(0);
-  const [lineCount, setLineCount] = useState(0);
 
   useEffect(() => {
     if (!isAnimating) return;
@@ -85,23 +85,19 @@ export default function TreeWindow({
     setStart(null);
   };
 
+  const lineCounterRef = useRef(0);
+
+  // Reset counter before each render cycle (or animation frame)
   lineCounterRef.current = 0;
 
+  // Update parent's line count after branches have rendered
   useEffect(() => {
     const timeout = setTimeout(() => {
       setLineCount(lineCounterRef.current);
     }, 0);
-    return () => clearTimeout(timeout);
-  }, [currentLevel]);
-
-  useEffect(() => {
-    // After DOM updates and branches rendered, update state
-    const timeout = setTimeout(() => {
-      setLineCount(lineCounterRef.current);
-    }, 0); // Let render complete first
 
     return () => clearTimeout(timeout);
-  }, [currentLevel]);
+  }, [currentLevel, setLineCount]);
 
   return (
     <div
@@ -122,9 +118,6 @@ export default function TreeWindow({
           position: 'relative',
         }}
       >
-        <div className="absolute top-2 left-2 text-sm bg-white bg-opacity-80 px-3 py-1 rounded shadow">
-          Lines Drawn: {Math.floor(lineCount / 2)}
-        </div>
         <Tree
           currentAnimationLevel={currentLevel}
           countRef={lineCounterRef}
