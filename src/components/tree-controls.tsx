@@ -42,7 +42,7 @@ export default function TreeControls() {
     initialWidth: 10,
     branchAngle: 45,
     scale: 0.7,
-    leafSize: 4,
+    leafSize: 10,
     leafColor: 'green',
     frameRate: 500,
     maxLevel: 6,
