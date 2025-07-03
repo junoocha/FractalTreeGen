@@ -17,6 +17,7 @@ export type BranchParams = {
   leafSize: number;
   leafColor: string;
   currentAnimationLevel: number;
+  countRef: React.RefObject<number>;
 };
 
 export default function Branch({
@@ -42,6 +43,9 @@ export default function Branch({
 
   // current frame-curLevel for staggered animation
   currentAnimationLevel,
+
+  // store number of branches
+  countRef,
 }: BranchParams) {
   const rad = (angle * Math.PI) / 180; // Convert angle to radians for trig functions
 
@@ -61,7 +65,7 @@ export default function Branch({
       const perpAngle = rad + Math.PI / 2;
 
       // smaller offset to partially overlap the branch
-      const offsetDistance = Math.random() * leafSize * 1.5;
+      const offsetDistance = Math.random() * leafSize * 1.2;
 
       // randomly decide if offset goes left or right (positive or negative)
       const direction = Math.random() < 0.5 ? -1 : 1;
@@ -100,6 +104,7 @@ export default function Branch({
         leafSize,
         leafColor,
         currentAnimationLevel,
+        countRef,
       };
     });
   }, [
@@ -116,9 +121,15 @@ export default function Branch({
     leafColor,
     currentAnimationLevel,
     maxLevel,
+    countRef,
   ]);
 
   if (curLevel > currentAnimationLevel || curLevel > maxLevel) return null;
+
+  // to store the number of lines to be generated
+  if (countRef.current != null) {
+    countRef.current += 1;
+  }
 
   return (
     <>

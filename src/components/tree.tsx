@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, RefObject } from 'react';
 import Branch from './create-branch';
 import type { TreeSettings } from './tree-window';
 
@@ -13,7 +13,11 @@ export default function Tree({
   leafSize,
   leafColor,
   maxLevel,
-}: TreeSettings & { currentAnimationLevel: number }) {
+  countRef,
+}: TreeSettings & {
+  currentAnimationLevel: number;
+  countRef: RefObject<number>;
+}) {
   const [origin, setOrigin] = useState<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
@@ -37,6 +41,7 @@ export default function Tree({
       leafSize={leafSize}
       leafColor={leafColor}
       currentAnimationLevel={currentAnimationLevel}
+      countRef={countRef}
     />
   );
 }

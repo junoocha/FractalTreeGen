@@ -30,6 +30,8 @@ export default function TreeWindow({
   const [offset, setOffset] = useState({ x: 350, y: 0 });
   const [dragging, setDragging] = useState(false);
   const [start, setStart] = useState<{ x: number; y: number } | null>(null);
+  const lineCounterRef = useRef(0);
+  const [lineCount, setLineCount] = useState(0);
 
   useEffect(() => {
     if (!isAnimating) return;
@@ -48,11 +50,22 @@ export default function TreeWindow({
     return () => clearInterval(interval);
   }, [isAnimating, settings.frameRate, settings.maxLevel]);
 
-  const handleWheel = (e: React.WheelEvent) => {
-    e.preventDefault();
-    const newScale = Math.max(0.1, scale - e.deltaY * 0.001);
-    setScale(newScale);
-  };
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const newScale = Math.max(0.1, scale - e.deltaY * 0.001);
+      setScale(newScale);
+    };
+
+    el.addEventListener('wheel', handleWheel, { passive: false });
+
+    return () => {
+      el.removeEventListener('wheel', handleWheel);
+    };
+  }, [scale]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     setDragging(true);
@@ -72,10 +85,27 @@ export default function TreeWindow({
     setStart(null);
   };
 
+  lineCounterRef.current = 0;
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setLineCount(lineCounterRef.current);
+    }, 0);
+    return () => clearTimeout(timeout);
+  }, [currentLevel]);
+
+  useEffect(() => {
+    // After DOM updates and branches rendered, update state
+    const timeout = setTimeout(() => {
+      setLineCount(lineCounterRef.current);
+    }, 0); // Let render complete first
+
+    return () => clearTimeout(timeout);
+  }, [currentLevel]);
+
   return (
     <div
       ref={containerRef}
-      onWheel={handleWheel}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
@@ -92,7 +122,14 @@ export default function TreeWindow({
           position: 'relative',
         }}
       >
-        <Tree currentAnimationLevel={currentLevel} {...settings} />
+        <div className="absolute top-2 left-2 text-sm bg-white bg-opacity-80 px-3 py-1 rounded shadow">
+          Lines Drawn: {Math.floor(lineCount / 2)}
+        </div>
+        <Tree
+          currentAnimationLevel={currentLevel}
+          countRef={lineCounterRef}
+          {...settings}
+        />
       </div>
     </div>
   );
