@@ -83,7 +83,7 @@ export default function TreeControls() {
           ['Branch Angle', 'branchAngle', 5, 0],
           ['Scale Factor', 'scale', 0.05, 0.01],
           ['Leaf Size', 'leafSize', 1, 0],
-          ['Frame Rate (ms)', 'frameRate', 50, 10],
+          ['Frame Rate (ms)', 'frameRate', 50, 1],
         ].map(([label, key, step, min]) => (
           <div key={key} className="mb-3">
             <label className="block mb-1 font-medium">{label}</label>
@@ -103,11 +103,21 @@ export default function TreeControls() {
                 step={step as number}
                 value={settings[key as keyof typeof settings] as number}
                 onChange={(e) => {
+                  // Allow user to type freely without immediately clamping
+                  setSettings((prev) => ({
+                    ...prev,
+                    [key]: e.target.value,
+                  }));
+                }}
+                onBlur={(e) => {
                   const val = Math.max(
                     Number(min),
                     parseFloat(e.target.value || '0')
                   );
-                  setSettings((prev) => ({ ...prev, [key]: val }));
+                  setSettings((prev) => ({
+                    ...prev,
+                    [key]: parseFloat(val.toFixed?.(2)),
+                  }));
                 }}
               />
               <button
