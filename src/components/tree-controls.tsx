@@ -15,6 +15,26 @@ function calculateTotalBranches(
   );
 }
 
+function getBranchCountColor(total: number): string {
+  if (total < 1000) return 'text-green-700';
+  if (total < 2000) return 'text-yellow-600';
+  if (total < 5000) return 'text-orange-600';
+  return 'text-red-600 font-bold';
+}
+
+function getBranchCountWarning(total: number): string {
+  switch (true) {
+    case total < 1000:
+      return 'No risk of lag!';
+    case total < 2000:
+      return 'Expect a little lag...';
+    case total < 5000:
+      return 'Okay um... there might be some significant lag...';
+    default:
+      return '...You do know generating over 5000 lines might cause issues right?';
+  }
+}
+
 export default function TreeControls() {
   const [settings, setSettings] = useState({
     branchesPerLevel: 2,
@@ -33,6 +53,12 @@ export default function TreeControls() {
   const [appliedSettings, setAppliedSettings] = useState(settings);
   const isFinished = currentLevel >= appliedSettings.maxLevel;
   const [lineCount, setLineCount] = useState(0);
+
+  const totalBranches = calculateTotalBranches(
+    settings.branchesPerLevel,
+    settings.maxLevel
+  );
+  const branchCountClass = getBranchCountColor(totalBranches);
 
   const update = (key: keyof typeof settings, delta: number, minValue = 1) => {
     setSettings((prev) => {
@@ -137,9 +163,16 @@ export default function TreeControls() {
           Lines Drawn: {Math.floor(lineCount) / 2}
         </div>
 
-        <div className="mt-2 p-3 bg-gray-100 rounded shadow text-center font-semibold">
-          Total Branches:{' '}
-          {calculateTotalBranches(settings.branchesPerLevel, settings.maxLevel)}
+        <div
+          className={`p-3 bg-gray-100 rounded shadow text-center font-semibold ${branchCountClass}`}
+        >
+          Total Branches: {totalBranches.toLocaleString()}
+        </div>
+
+        <div
+          className={`p-3 bg-gray-100 rounded shadow text-center font-semibold ${branchCountClass}`}
+        >
+          {getBranchCountWarning(totalBranches)}
         </div>
       </div>
 
