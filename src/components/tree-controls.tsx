@@ -3,6 +3,18 @@
 import { useState } from 'react';
 import TreeWindow from './tree-window';
 
+function calculateTotalBranches(
+  branchesPerLevel: number,
+  maxLevel: number
+): number {
+  if (branchesPerLevel === 1) {
+    return maxLevel + 1;
+  }
+  return Math.floor(
+    (Math.pow(branchesPerLevel, maxLevel + 1) - 1) / (branchesPerLevel - 1)
+  );
+}
+
 export default function TreeControls() {
   const [settings, setSettings] = useState({
     branchesPerLevel: 2,
@@ -123,6 +135,11 @@ export default function TreeControls() {
 
         <div className="mt-6 p-3 bg-gray-100 rounded shadow text-center font-semibold">
           Lines Drawn: {Math.floor(lineCount) / 2}
+        </div>
+
+        <div className="mt-2 p-3 bg-gray-100 rounded shadow text-center font-semibold">
+          Total Branches:{' '}
+          {calculateTotalBranches(settings.branchesPerLevel, settings.maxLevel)}
         </div>
       </div>
 
