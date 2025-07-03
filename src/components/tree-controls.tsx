@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import TreeWindow from './tree-window';
+import { count } from 'console';
 
 function calculateTotalBranches(
   branchesPerLevel: number,
@@ -43,7 +44,7 @@ export default function TreeControls() {
     branchAngle: 45,
     scale: 0.7,
     leafSize: 10,
-    leafColor: 'green',
+    leafColor: '#008000',
     frameRate: 500,
     maxLevel: 6,
   });
@@ -52,7 +53,7 @@ export default function TreeControls() {
   const [currentLevel, setCurrentLevel] = useState(0);
   const [appliedSettings, setAppliedSettings] = useState(settings);
   const isFinished = currentLevel >= appliedSettings.maxLevel;
-  const [lineCount, setLineCount] = useState(0);
+  const [lineCount, setLineCount] = useState(1);
 
   const totalBranches = calculateTotalBranches(
     settings.branchesPerLevel,
@@ -129,7 +130,12 @@ export default function TreeControls() {
             onChange={(e) =>
               setSettings((prev) => ({ ...prev, leafColor: e.target.value }))
             }
-            className="w-12 h-8 p-0 border-0"
+            onClick={() => console.log(lineCount)}
+            className={`w-13 h-13 p-0 border-0 rounded transition-opacity ${
+              lineCount > 3 ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'
+            }`}
+            disabled={lineCount > 3} // disable if animating or tree isn't finished.
+            //  And yes, I know it should be 1 but um, after reset, even after setting it to 1 it's technically 2. Doesn't disrupt the counter tho
           />
         </div>
 
@@ -152,6 +158,7 @@ export default function TreeControls() {
             onClick={() => {
               setIsAnimating(false);
               setCurrentLevel(0);
+              setLineCount(1);
             }}
             className="bg-gray-400 text-white px-4 py-2 rounded"
           >
