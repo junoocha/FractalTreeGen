@@ -165,7 +165,9 @@ export default function TreeControls() {
               setSettings((prev) => ({ ...prev, branchColor: e.target.value }))
             }
             disabled={lineCount > 3}
-            className="w-13 h-13 p-0 border-0 opacity-100 disabled:opacity-40"
+            className={`w-13 h-13 p-0 border-0 rounded transition-opacity ${
+              lineCount > 3 ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'
+            }`}
           />
         </div>
 
