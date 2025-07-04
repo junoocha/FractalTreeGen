@@ -195,7 +195,7 @@ export default function TreeControls() {
               }
               className="scale-150"
             />
-            Skip animation
+            Skip Animation
           </label>
         </div>
 
