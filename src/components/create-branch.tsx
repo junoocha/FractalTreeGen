@@ -16,6 +16,7 @@ export type BranchParams = {
   branchesPerLevel: number;
   leafSize: number;
   leafColor: string;
+  branchColor: string;
   currentAnimationLevel: number;
   countRef: React.RefObject<number>;
 };
@@ -40,6 +41,8 @@ export default function Branch({
   // leaf stuff
   leafSize,
   leafColor,
+
+  branchColor,
 
   // current frame-curLevel for staggered animation
   currentAnimationLevel,
@@ -103,6 +106,7 @@ export default function Branch({
         branchesPerLevel,
         leafSize,
         leafColor,
+        branchColor,
         currentAnimationLevel,
         countRef,
       };
@@ -138,6 +142,7 @@ export default function Branch({
         length={length}
         angle={angle}
         width={width}
+        color={branchColor}
         style={{
           left: x,
           top: y - length, // position top of line relative to parent

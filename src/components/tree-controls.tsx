@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import TreeWindow from './tree-window';
 import { count } from 'console';
 
@@ -45,6 +45,7 @@ export default function TreeControls() {
     scale: 0.7,
     leafSize: 10,
     leafColor: '#008000',
+    branchColor: '#8B4513',
     frameRate: 500,
     maxLevel: 6,
   });
@@ -68,6 +69,14 @@ export default function TreeControls() {
       return { ...prev, [key]: next };
     });
   };
+
+  useEffect(() => {
+    setAppliedSettings((prev) => ({
+      ...prev,
+      branchColor: settings.branchColor,
+      leafColor: settings.leafColor,
+    }));
+  }, [settings.branchColor, settings.leafColor]);
 
   return (
     <div className="flex flex-col md:flex-row w-full h-screen bg-[#f3f7f2]">
@@ -146,6 +155,17 @@ export default function TreeControls() {
             }`}
             disabled={lineCount > 3} // disable if animating or tree isn't finished.
             //  And yes, I know it should be 1 but um, after reset, even after setting it to 1 it's technically 2. Doesn't disrupt the counter tho
+          />
+
+          <label className="block mb-1 font-medium">Branch Color</label>
+          <input
+            type="color"
+            value={settings.branchColor}
+            onChange={(e) =>
+              setSettings((prev) => ({ ...prev, branchColor: e.target.value }))
+            }
+            disabled={lineCount > 3}
+            className="w-13 h-13 p-0 border-0 opacity-100 disabled:opacity-40"
           />
         </div>
 

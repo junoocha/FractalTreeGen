@@ -10,6 +10,7 @@ export type TreeSettings = {
   scale: number;
   leafSize: number;
   leafColor: string;
+  branchColor: string;
   frameRate: number;
   maxLevel: number;
 };

@@ -14,9 +14,11 @@ export default function Tree({
   leafColor,
   maxLevel,
   countRef,
+  branchColor,
 }: TreeSettings & {
   currentAnimationLevel: number;
   countRef: RefObject<number>;
+  branchColor: string;
 }) {
   const [origin, setOrigin] = useState<{ x: number; y: number } | null>(null);
 
@@ -40,6 +42,7 @@ export default function Tree({
       branchesPerLevel={branchesPerLevel}
       leafSize={leafSize}
       leafColor={leafColor}
+      branchColor={branchColor}
       currentAnimationLevel={currentAnimationLevel}
       countRef={countRef}
     />

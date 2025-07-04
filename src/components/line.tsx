@@ -12,7 +12,7 @@ export default function Line({
   length,
   angle,
   width,
-  color = '#654321',
+  color,
   style,
 }: LineProps) {
   return (
