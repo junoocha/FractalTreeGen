@@ -60,25 +60,12 @@ export default function Branch({
     return Array.from({ length: 2 }).map(() => {
       const p = Math.random(); // position along branch (0 to 1)
 
-      // base point on the branch line
       const baseX = x + Math.sin(rad) * length * p;
       const baseY = y - Math.cos(rad) * length * p;
 
-      // perpendicular angle (90 degrees from branch)
-      const perpAngle = rad + Math.PI / 2;
-
-      // smaller offset to partially overlap the branch
-      const offsetDistance = Math.random() * leafSize * 1.2;
-
-      // randomly decide if offset goes left or right (positive or negative)
-      const direction = Math.random() < 0.5 ? -1 : 1;
-
-      const offsetX = baseX + Math.cos(perpAngle) * offsetDistance * direction;
-      const offsetY = baseY + Math.sin(perpAngle) * offsetDistance * direction;
-
-      return { x: offsetX, y: offsetY };
+      return { x: baseX, y: baseY };
     });
-  }, [x, y, length, rad, leafSize]);
+  }, [x, y, length, rad]);
 
   // generate children only once using useMemo to avoid re-render
   const children = useMemo(() => {
