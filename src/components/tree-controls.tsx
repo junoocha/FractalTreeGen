@@ -198,7 +198,7 @@ export default function TreeControls() {
         </div>
 
         <div className="mt-6 p-3 bg-gray-100 rounded shadow text-center font-semibold">
-          Lines Drawn: {Math.floor(lineCount) / 2}
+          Lines Drawn: {lineCount > 3 ? Math.floor(lineCount / 2) : ''}
         </div>
 
         <div
