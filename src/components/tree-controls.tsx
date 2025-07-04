@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import TreeWindow from './tree-window';
-import { count } from 'console';
 
 function calculateTotalBranches(
   branchesPerLevel: number,
