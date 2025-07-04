@@ -21,12 +21,14 @@ export default function TreeWindow({
   currentLevel,
   setCurrentLevel,
   setLineCount,
+  frameRate,
 }: {
   settings: TreeSettings;
   isAnimating: boolean;
   currentLevel: number;
   setCurrentLevel: (v: number | ((prev: number) => number)) => void;
   setLineCount: React.Dispatch<React.SetStateAction<number>>;
+  frameRate: number;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
@@ -37,6 +39,11 @@ export default function TreeWindow({
   useEffect(() => {
     if (!isAnimating) return;
 
+    if (frameRate === 0) {
+      setCurrentLevel(settings.maxLevel);
+      return;
+    }
+
     const interval = setInterval(() => {
       setCurrentLevel((prev) => {
         if (prev >= settings.maxLevel) {
@@ -45,7 +52,7 @@ export default function TreeWindow({
         }
         return prev + 1;
       });
-    }, settings.frameRate);
+    }, frameRate);
 
     // Clean up interval on pause or unmount
     return () => clearInterval(interval);

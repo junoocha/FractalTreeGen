@@ -54,12 +54,16 @@ export default function TreeControls() {
   const [appliedSettings, setAppliedSettings] = useState(settings);
   const isFinished = currentLevel >= appliedSettings.maxLevel;
   const [lineCount, setLineCount] = useState(1);
+  const [skipLargeGrowthAnimation, setSkipLargeGrowthAnimation] =
+    useState(true);
 
   const totalBranches = calculateTotalBranches(
     settings.branchesPerLevel,
     settings.maxLevel
   );
   const branchCountClass = getBranchCountColor(totalBranches);
+
+  const effectiveFrameRate = skipLargeGrowthAnimation ? 0 : settings.frameRate;
 
   const update = (key: keyof typeof settings, delta: number, minValue = 1) => {
     setSettings((prev) => {
@@ -141,33 +145,58 @@ export default function TreeControls() {
         ))}
 
         <div className="mb-3">
-          <label className="block mb-1 font-medium">Leaf Color</label>
-          <input
-            type="color"
-            value={settings.leafColor}
-            onChange={(e) =>
-              setSettings((prev) => ({ ...prev, leafColor: e.target.value }))
-            }
-            onClick={() => console.log(lineCount)}
-            className={`w-13 h-13 p-0 border-0 rounded transition-opacity ${
-              lineCount > 3 ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'
-            }`}
-            disabled={lineCount > 3} // disable if animating or tree isn't finished.
-            //  And yes, I know it should be 1 but um, after reset, even after setting it to 1 it's technically 2. Doesn't disrupt the counter tho
-          />
+          <div className="flex gap-4 items-center mb-3">
+            <div className="flex flex-col items-center">
+              <label className="mb-1 font-medium">Leaf</label>
+              <input
+                type="color"
+                value={settings.leafColor}
+                onChange={(e) =>
+                  setSettings((prev) => ({
+                    ...prev,
+                    leafColor: e.target.value,
+                  }))
+                }
+                className={`w-11 h-11 p-0 border-0 rounded transition-opacity ${
+                  lineCount > 3
+                    ? 'opacity-40 cursor-not-allowed'
+                    : 'cursor-pointer'
+                }`}
+                disabled={lineCount > 3}
+              />
+            </div>
+            <div className="flex flex-col items-center">
+              <label className="mb-1 font-medium">Branch</label>
+              <input
+                type="color"
+                value={settings.branchColor}
+                onChange={(e) =>
+                  setSettings((prev) => ({
+                    ...prev,
+                    branchColor: e.target.value,
+                  }))
+                }
+                className={`w-11 h-11 p-0 border-0 rounded transition-opacity ${
+                  lineCount > 3
+                    ? 'opacity-40 cursor-not-allowed'
+                    : 'cursor-pointer'
+                }`}
+                disabled={lineCount > 3}
+              />
+            </div>
+          </div>
 
-          <label className="block mb-1 font-medium">Branch Color</label>
-          <input
-            type="color"
-            value={settings.branchColor}
-            onChange={(e) =>
-              setSettings((prev) => ({ ...prev, branchColor: e.target.value }))
-            }
-            disabled={lineCount > 3}
-            className={`w-13 h-13 p-0 border-0 rounded transition-opacity ${
-              lineCount > 3 ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'
-            }`}
-          />
+          <label className="flex items-center gap-2 mt-4">
+            <input
+              type="checkbox"
+              checked={skipLargeGrowthAnimation}
+              onChange={() =>
+                setSkipLargeGrowthAnimation(!skipLargeGrowthAnimation)
+              }
+              className="scale-150"
+            />
+            Skip animation
+          </label>
         </div>
 
         <div className="flex gap-4 mt-4">
@@ -222,6 +251,7 @@ export default function TreeControls() {
           currentLevel={currentLevel}
           setCurrentLevel={setCurrentLevel}
           setLineCount={setLineCount}
+          frameRate={effectiveFrameRate}
         />
       </div>
     </div>
