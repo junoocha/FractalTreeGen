@@ -90,7 +90,7 @@ export default function TreeControls() {
         leafColor: leafColorInput,
         branchColor: branchColorInput,
       }));
-    }, 150);
+    }, 50);
 
     return () => clearTimeout(timeout);
   }, [leafColorInput, branchColorInput]);
