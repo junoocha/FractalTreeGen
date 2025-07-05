@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import TreeWindow from './tree-window';
+import TreeWindow from './tree-window/tree-window';
 
 function calculateTotalBranches(
   branchesPerLevel: number,
@@ -52,6 +52,10 @@ export default function TreeControls() {
   const [isAnimating, setIsAnimating] = useState(false);
   const [currentLevel, setCurrentLevel] = useState(0);
   const [appliedSettings, setAppliedSettings] = useState(settings);
+  const [leafColorInput, setLeafColorInput] = useState(settings.leafColor);
+  const [branchColorInput, setBranchColorInput] = useState(
+    settings.branchColor
+  );
   const isFinished = currentLevel >= appliedSettings.maxLevel;
   const [lineCount, setLineCount] = useState(1);
   const [skipLargeGrowthAnimation, setSkipLargeGrowthAnimation] =
@@ -74,12 +78,22 @@ export default function TreeControls() {
   };
 
   useEffect(() => {
-    setAppliedSettings((prev) => ({
-      ...prev,
-      branchColor: settings.branchColor,
-      leafColor: settings.leafColor,
-    }));
-  }, [settings.branchColor, settings.leafColor]);
+    const timeout = setTimeout(() => {
+      setSettings((prev) => ({
+        ...prev,
+        leafColor: leafColorInput,
+        branchColor: branchColorInput,
+      }));
+
+      setAppliedSettings((prev) => ({
+        ...prev,
+        leafColor: leafColorInput,
+        branchColor: branchColorInput,
+      }));
+    }, 150);
+
+    return () => clearTimeout(timeout);
+  }, [leafColorInput, branchColorInput]);
 
   return (
     <div className="flex flex-col md:flex-row w-full h-screen bg-[#f3f7f2]">
@@ -151,12 +165,7 @@ export default function TreeControls() {
               <input
                 type="color"
                 value={settings.leafColor}
-                onChange={(e) =>
-                  setSettings((prev) => ({
-                    ...prev,
-                    leafColor: e.target.value,
-                  }))
-                }
+                onChange={(e) => setLeafColorInput(e.target.value)}
                 className={`w-11 h-11 p-0 border-0 rounded transition-opacity ${
                   lineCount > 3
                     ? 'opacity-40 cursor-not-allowed'
@@ -170,12 +179,7 @@ export default function TreeControls() {
               <input
                 type="color"
                 value={settings.branchColor}
-                onChange={(e) =>
-                  setSettings((prev) => ({
-                    ...prev,
-                    branchColor: e.target.value,
-                  }))
-                }
+                onChange={(e) => setBranchColorInput(e.target.value)}
                 className={`w-11 h-11 p-0 border-0 rounded transition-opacity ${
                   lineCount > 3
                     ? 'opacity-40 cursor-not-allowed'

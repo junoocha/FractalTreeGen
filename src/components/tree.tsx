@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState, RefObject } from 'react';
 import Branch from './create-branch';
-import type { TreeSettings } from './tree-window';
+import type { TreeSettings } from '../../utils/tree-settings-types';
 
 export default function Tree({
   currentAnimationLevel,
