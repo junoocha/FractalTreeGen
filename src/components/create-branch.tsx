@@ -78,6 +78,8 @@ export default function Branch(props: BranchProps) {
         width: width * 0.7, // Make child branches thinner
       }),
     [
+      endX,
+      endY,
       curLevel,
       maxLevel,
       length,
