@@ -31,7 +31,7 @@ export default function Tree({
 
   // Set a fixed origin point for the tree on mount
   useEffect(() => {
-    setOrigin({ x: 400, y: 500 }); // Coordinates from which the tree grows upward
+    setOrigin({ x: -420, y: 200 }); // Coordinates from which the tree grows upward
   }, []);
 
   // Don't render until origin is initialized

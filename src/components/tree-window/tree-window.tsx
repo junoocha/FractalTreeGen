@@ -22,14 +22,13 @@ export default function TreeWindow({
   setLineCount: React.Dispatch<React.SetStateAction<number>>;
   frameRate: number;
 }) {
-  const containerRef = useRef<HTMLDivElement>(null); // Used to attach scroll/zoom behavior
   const [scale, setScale] = useState(1); // Scale state for zooming in/out
 
   // Mutable ref to track how many lines are drawn during this render cycle
   const lineCounterRef = useRef(0);
 
   // Get drag/pan offset and handlers from custom hook
-  const { offset, handleMouseDown, handleMouseMove, handleMouseUp } = useDrag();
+  const { offset, containerRef } = useDrag();
 
   // Apply scroll-to-zoom functionality to container
   useZoom(containerRef, scale, setScale);
@@ -55,13 +54,9 @@ export default function TreeWindow({
 
   return (
     <div
-      ref={containerRef} // Attach zoom/scroll behavior
-      onMouseDown={handleMouseDown} // Start drag
-      onMouseMove={handleMouseMove} // Continue drag
-      onMouseUp={handleMouseUp} // Stop drag (user releases mouse)
-      onMouseLeave={handleMouseUp} // Also stop if mouse leaves the area
-      className="relative w-full h-full overflow-hidden bg-[#eef6ec] cursor-grab"
-      style={{ userSelect: 'none' }} // Prevent text selection while dragging
+      ref={containerRef}
+      className="relative w-full h-full overflow-hidden bg-[#eef6ec] cursor-grab touch-action-none"
+      style={{ userSelect: 'none', touchAction: 'none' }}
     >
       <div
         style={{
