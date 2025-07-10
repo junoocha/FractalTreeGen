@@ -19,7 +19,7 @@ export default function ControlSlider({
 }: ControlSliderProps) {
   // Helper function to update the value using buttons (+/-)
   const update = (delta: number) => {
-    setSettings((prev: any) => {
+    setSettings((prev) => {
       const key = settingKey as keyof TreeSettings;
       // Get current value and apply delta
       const raw = Number(prev[key]) + delta;
