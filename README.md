@@ -21,33 +21,33 @@ An interactive, animated fractal tree generator built with **React** and **TypeS
 ## Project Structure
 
 src/
-│
-├── app/
-│ └── page.tsx # Root layout and rendering logic
-│
-├── components/
-│ ├── control-panel/ # Settings UI
-│ │ ├── ControlPanel.tsx
-│ │ ├── control-slider.tsx
-│ │ ├── color-pickers.tsx
-│ │ └── action-buttons.tsx
-│ │
-│ ├── tree/
-│ │ ├── Tree.tsx # Recursively renders branches
-│ │ ├── Branch.tsx # Represents a single recursive branch
-│ │ └── TreeWindow.tsx # Viewport that includes drag, zoom, etc.
-│ │
-│ ├── ui/
-│ │ ├── Line.tsx # Renders a rotated line (branch segment)
-│ │ └── Leaf.tsx # Renders a leaf shape
-│
-├── hooks/
-│ ├── use-drag.ts
-│ ├── use-zoom.ts
-│ └── use-tree-animation.ts
-│
-├── utils/
-│ └── tree-settings-types.ts
+
+- app/
+  - page.tsx # Root layout and rendering logic
+
+- components/
+  - control-panel/ # Settings UI
+    - ControlPanel.tsx
+    - control-slider.tsx
+    - color-pickers.tsx
+    - action-buttons.tsx
+
+  - tree/
+    - Tree.tsx # Recursively renders branches
+    - Branch.tsx # Represents a single recursive branch
+    - TreeWindow.tsx # Viewport that includes drag, zoom, etc.
+
+  - ui/
+    - Line.tsx # Renders a rotated line (branch segment)
+    - Leaf.tsx # Renders a leaf shape
+
+- hooks/
+  - use-drag.ts
+  - use-zoom.ts
+  - use-tree-animation.ts
+
+- utils/
+  - tree-settings-types.ts
 
 ## Key Components
 
