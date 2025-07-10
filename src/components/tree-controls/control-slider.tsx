@@ -2,10 +2,10 @@ import { TreeSettings } from '../../../utils/tree-settings-types';
 
 interface ControlSliderProps {
   label: string; // Label to show above the control
-  settingKey: string; // The key in the settings object this control is tied to
+  settingKey: keyof TreeSettings; // The key in the settings object this control is tied to
   step: number; // increment/decrement when buttons are clicked
   min: number; // Minimum allowed value
-  settings: Record<string, any>; // The current full settings object
+  settings: TreeSettings; // The current full settings object
   setSettings: (updater: (prev: TreeSettings) => TreeSettings) => void; // Function to update settings
 }
 
@@ -29,6 +29,25 @@ export default function ControlSlider({
     });
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const key = settingKey as keyof TreeSettings;
+    const value = parseFloat(e.target.value);
+
+    setSettings((prev) => ({
+      ...prev,
+      [key]: isNaN(value) ? 1 : value,
+    }));
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const key = settingKey as keyof TreeSettings;
+    const val = Math.max(min, parseFloat(e.target.value || '0'));
+    setSettings((prev) => ({
+      ...prev,
+      [key]: parseFloat(val.toFixed(2)),
+    }));
+  };
+
   return (
     <div className="mb-3">
       {/* Label for the setting */}
@@ -47,23 +66,12 @@ export default function ControlSlider({
           type="number"
           min={min}
           step={step}
-          value={settings[settingKey]} // Controlled input value
+          value={settings[settingKey as keyof TreeSettings]} // Controlled input value
           className="border rounded px-2 py-1 w-full"
           // Update settings on input change
-          onChange={(e) => {
-            setSettings((prev: any) => ({
-              ...prev,
-              [settingKey]: e.target.value, // Raw string value for now, wait for onBlur
-            }));
-          }}
+          onChange={handleInputChange}
           // When user leaves the input field, sanitize value
-          onBlur={(e) => {
-            const val = Math.max(min, parseFloat(e.target.value || '0'));
-            setSettings((prev: any) => ({
-              ...prev,
-              [settingKey]: parseFloat(val.toFixed(2)),
-            }));
-          }}
+          onBlur={handleBlur}
         />
 
         {/* Plus button: increases value by `step` */}
