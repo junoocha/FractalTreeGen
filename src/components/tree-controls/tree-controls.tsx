@@ -6,6 +6,7 @@ import ControlPanel from './control-panel';
 import { calculateTotalBranches } from '../../../utils/tree-controls-types';
 
 export default function TreeControls() {
+  // Full editable settings state (used by the ControlPanel)
   const [settings, setSettings] = useState({
     branchesPerLevel: 2,
     initialLength: 100,
@@ -19,27 +20,40 @@ export default function TreeControls() {
     maxLevel: 6,
   });
 
+  // Color pickers have their own controlled input state
   const [leafColorInput, setLeafColorInput] = useState(settings.leafColor);
   const [branchColorInput, setBranchColorInput] = useState(
     settings.branchColor
   );
 
+  // Snapshot of settings when animation is started (settings used for current tree being animated)
   const [appliedSettings, setAppliedSettings] = useState(settings);
+
+  // Animation state
   const [isAnimating, setIsAnimating] = useState(false);
-  const [currentLevel, setCurrentLevel] = useState(0);
-  const [lineCount, setLineCount] = useState(1);
+  const [currentLevel, setCurrentLevel] = useState(0); // Current depth level
+  const [lineCount, setLineCount] = useState(1); // Total number of lines drawn
+
+  // If true, skip frame delays for large trees
   const [skipLargeGrowthAnimation, setSkipLargeGrowthAnimation] =
     useState(true);
 
+  // Boolean indicating if the animation has completed
   const isFinished = currentLevel >= appliedSettings.maxLevel;
+
+  // Used for visual feedback on UI (e.g., warnings, counts)
   const totalBranches = calculateTotalBranches(
     settings.branchesPerLevel,
     settings.maxLevel
   );
+
+  // Frame rate is zero if skipping animation
   const effectiveFrameRate = skipLargeGrowthAnimation ? 0 : settings.frameRate;
 
+  // Effect to sync input color pickers to settings after short debounce
   useEffect(() => {
     const timeout = setTimeout(() => {
+      // Update both editable settings and applied snapshot
       setSettings((prev) => ({
         ...prev,
         leafColor: leafColorInput,
@@ -50,8 +64,8 @@ export default function TreeControls() {
         leafColor: leafColorInput,
         branchColor: branchColorInput,
       }));
-    }, 50);
-    return () => clearTimeout(timeout);
+    }, 50); // Small delay to avoid over-firing during rapid typing
+    return () => clearTimeout(timeout); // Clean up previous timeout
   }, [leafColorInput, branchColorInput]);
 
   return (
@@ -76,6 +90,8 @@ export default function TreeControls() {
         setSkipLargeGrowthAnimation={setSkipLargeGrowthAnimation}
         totalBranches={totalBranches}
       />
+
+      {/* Main tree canvas area */}
       <div className="flex-1">
         <TreeWindow
           settings={appliedSettings}

@@ -6,6 +6,7 @@ import {
   getBranchCountWarning,
 } from '../../../utils/tree-controls-types';
 
+// Configuration for all sliders: [Label, Setting Key, Step Size, Min Value]
 const CONTROL_FIELDS = [
   ['Max Levels', 'maxLevel', 1, 1],
   ['Branches Per Level', 'branchesPerLevel', 1, 1],
@@ -18,43 +19,46 @@ const CONTROL_FIELDS = [
 ] as const;
 
 export default function ControlPanel({
-  settings,
-  setSettings,
-  appliedSettings,
-  setAppliedSettings,
-  isAnimating,
-  setIsAnimating,
-  isFinished,
-  currentLevel,
-  setCurrentLevel,
-  lineCount,
-  setLineCount,
-  leafColorInput,
-  setLeafColorInput,
-  branchColorInput,
-  setBranchColorInput,
-  skipLargeGrowthAnimation,
-  setSkipLargeGrowthAnimation,
-  totalBranches,
+  settings, // Current control values
+  setSettings, // Function to update control values
+  setAppliedSettings, // Function to update applied settings
+  isAnimating, // Whether the animation is running
+  setIsAnimating, // Function to toggle animation
+  isFinished, // Whether the drawing is complete
+  currentLevel, // Current recursion level
+  setCurrentLevel, // Function to reset recursion level
+  lineCount, // Number of lines drawn
+  setLineCount, // Function to reset line count
+  leafColorInput, // Color value for leaves
+  setLeafColorInput, // Function to update leaf color
+  branchColorInput, // Color value for branches
+  setBranchColorInput, // Function to update branch color
+  skipLargeGrowthAnimation, // Boolean flag to skip animation
+  setSkipLargeGrowthAnimation, // Function to toggle animation skipping
+  totalBranches, // Calculated total expected branches
 }: any) {
+  // Dynamically set the color class based on total branch count
   const branchCountClass = getBranchCountColor(totalBranches);
 
   return (
     <div className="p-4 w-full md:w-80 bg-white border-r border-gray-300 overflow-y-auto">
+      {/* Section title */}
       <h2 className="text-lg font-bold mb-4">Tree Controls</h2>
 
+      {/* Render sliders for each control field */}
       {CONTROL_FIELDS.map(([label, key, step, min]) => (
         <ControlSlider
           key={key}
-          label={label}
-          settingKey={key}
-          step={step}
-          min={min}
+          label={label} // Slider label shown to user
+          settingKey={key} // Key in the settings object
+          step={step} // Step size
+          min={min} // Minimum value
           settings={settings}
           setSettings={setSettings}
         />
       ))}
 
+      {/* Color picker UI for leaf and branch colors */}
       <ColorPickers
         leafColorInput={leafColorInput}
         branchColorInput={branchColorInput}
@@ -63,6 +67,7 @@ export default function ControlPanel({
         lineCount={lineCount}
       />
 
+      {/* Checkbox for toggling animation skipping */}
       <label className="flex items-center gap-2 mt-4">
         <input
           type="checkbox"
@@ -75,6 +80,7 @@ export default function ControlPanel({
         Skip Animation
       </label>
 
+      {/* Start/Pause and Reset button controls */}
       <ActionButtons
         isAnimating={isAnimating}
         isFinished={isFinished}
@@ -86,16 +92,19 @@ export default function ControlPanel({
         setLineCount={setLineCount}
       />
 
+      {/* Shows number of lines drawn (divided by 2 if above threshold). For some reason, react keeps like double rendering or something but doesn't show it but messes with counter */}
       <div className="mt-6 p-3 bg-gray-100 rounded shadow text-center font-semibold">
         Lines Drawn: {lineCount > 3 ? Math.floor(lineCount / 2) : ''}
       </div>
 
+      {/* Display total expected branches with color indicator */}
       <div
         className={`p-3 bg-gray-100 rounded shadow text-center font-semibold ${branchCountClass}`}
       >
         Expected Branches: {totalBranches.toLocaleString()}
       </div>
 
+      {/* Optional performance warning if too many branches */}
       <div
         className={`p-3 bg-gray-100 rounded shadow text-center font-semibold ${branchCountClass}`}
       >
