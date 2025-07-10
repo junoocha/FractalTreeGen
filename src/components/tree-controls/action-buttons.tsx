@@ -1,16 +1,16 @@
+import { TreeSettings } from '../../../utils/tree-settings-types';
+
 interface ActionButtonsProps {
-  // animation playing and finished
   isAnimating: boolean;
   isFinished: boolean;
-  currentLevel: number; // Current depth level of the tree
+  currentLevel: number;
   setIsAnimating: (val: boolean) => void;
 
-  // tree setting stuff. Applied = stats that are currently in the settings, settings is what is being appleid
-  setAppliedSettings: (s: any) => void;
-  settings: any;
+  setAppliedSettings: (s: TreeSettings) => void;
+  settings: TreeSettings;
 
   setCurrentLevel: (val: number) => void;
-  setLineCount: (val: number) => void; // number of branches currently made
+  setLineCount: (val: number) => void;
 }
 
 export default function ActionButtons({

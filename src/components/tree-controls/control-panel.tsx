@@ -5,9 +5,11 @@ import {
   getBranchCountColor,
   getBranchCountWarning,
 } from '../../../utils/tree-controls-types';
+import { ControlPanelProps } from '../../../utils/control-panel-types';
+import { TreeSettings } from '../../../utils/tree-settings-types';
 
 // Configuration for all sliders: [Label, Setting Key, Step Size, Min Value]
-const CONTROL_FIELDS = [
+const CONTROL_FIELDS: [string, keyof TreeSettings, number, number][] = [
   ['Max Levels', 'maxLevel', 1, 1],
   ['Branches Per Level', 'branchesPerLevel', 1, 1],
   ['Initial Length', 'initialLength', 10, 1],
@@ -36,7 +38,7 @@ export default function ControlPanel({
   skipLargeGrowthAnimation, // Boolean flag to skip animation
   setSkipLargeGrowthAnimation, // Function to toggle animation skipping
   totalBranches, // Calculated total expected branches
-}: any) {
+}: ControlPanelProps) {
   // Dynamically set the color class based on total branch count
   const branchCountClass = getBranchCountColor(totalBranches);
 

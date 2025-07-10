@@ -4,10 +4,11 @@ import { useState, useEffect } from 'react';
 import TreeWindow from '../tree-window/tree-window';
 import ControlPanel from './control-panel';
 import { calculateTotalBranches } from '../../../utils/tree-controls-types';
+import { TreeSettings } from '../../../utils/tree-settings-types';
 
 export default function TreeControls() {
   // Full editable settings state (used by the ControlPanel)
-  const [settings, setSettings] = useState({
+  const [settings, setSettings] = useState<TreeSettings>({
     branchesPerLevel: 2,
     initialLength: 100,
     initialWidth: 10,

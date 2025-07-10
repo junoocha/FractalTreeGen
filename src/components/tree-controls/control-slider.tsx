@@ -1,10 +1,12 @@
+import { TreeSettings } from '../../../utils/tree-settings-types';
+
 interface ControlSliderProps {
   label: string; // Label to show above the control
   settingKey: string; // The key in the settings object this control is tied to
   step: number; // increment/decrement when buttons are clicked
   min: number; // Minimum allowed value
   settings: Record<string, any>; // The current full settings object
-  setSettings: (updater: (prev: any) => any) => void; // Function to update settings
+  setSettings: (updater: (prev: TreeSettings) => TreeSettings) => void; // Function to update settings
 }
 
 export default function ControlSlider({
