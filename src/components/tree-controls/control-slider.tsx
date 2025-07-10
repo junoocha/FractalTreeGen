@@ -20,12 +20,13 @@ export default function ControlSlider({
   // Helper function to update the value using buttons (+/-)
   const update = (delta: number) => {
     setSettings((prev: any) => {
+      const key = settingKey as keyof TreeSettings;
       // Get current value and apply delta
-      const raw = Number(prev[settingKey]) + delta;
+      const raw = Number(prev[key]) + delta;
       // Ensure the new value is not less than the min and round to 2 decimals. Mostly 2 decimals for the scale factor
       const next = Math.max(min, parseFloat(raw.toFixed(2)));
       // Return the updated settings object
-      return { ...prev, [settingKey]: next };
+      return { ...prev, [key]: next };
     });
   };
 
