@@ -2,11 +2,16 @@ export function calculateTotalBranches(
   branchesPerLevel: number,
   maxLevel: number
 ): number {
-  return branchesPerLevel === 1
-    ? maxLevel + 1
-    : Math.floor(
-        (Math.pow(branchesPerLevel, maxLevel + 1) - 1) / (branchesPerLevel - 1)
-      );
+  if (branchesPerLevel === 1) {
+    // Each level adds 1 branch, plus the trunk
+    return maxLevel + 1;
+  } else {
+    // Total branches = 1 (trunk) + sum of all children at each level
+    // Geometric series sum for 'maxLevel' levels after the trunk
+    return Math.floor(
+      (Math.pow(branchesPerLevel, maxLevel) - 1) / (branchesPerLevel - 1)
+    );
+  }
 }
 
 export function getBranchCountColor(total: number): string {

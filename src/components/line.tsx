@@ -1,8 +1,8 @@
-'use client'; // Enables React client-side rendering
+'use client'; 
 
-// Props for configuring the appearance and positioning of the line
+
 export type LineProps = {
-  length: number; // Length (height) of the line in pixels
+  length: number; // Length of the line in pixels
   angle: number; // Rotation angle in degrees
   width: number; // Width (thickness) of the line
   color?: string; // Optional color of the line
@@ -21,9 +21,9 @@ export default function Line({
     <div
       className="absolute" // Allow free positioning inside a parent container
       style={{
-        width: `${width}px`, // Set the visual thickness of the line
-        height: `${length}px`, // Set the length (height) of the branch
-        backgroundColor: color, // Apply the desired color
+        width: `${width}px`,
+        height: `${length}px`, 
+        backgroundColor: color, 
         transform: `translateX(-50%) rotate(${angle}deg)`,
         // - Center the line horizontally around its base using translateX(-50%)
         // - Rotate the line from its base by the given angle
