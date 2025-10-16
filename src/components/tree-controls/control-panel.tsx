@@ -95,8 +95,9 @@ export default function ControlPanel({
       />
 
       {/* Shows number of lines drawn (divided by 2 if above threshold). For some reason, react keeps like double rendering or something but doesn't show it but messes with counter */}
+      {/* fails local but should work fine on production? */}
       <div className="mt-6 p-3 bg-gray-100 rounded shadow text-center font-semibold">
-        Lines Drawn: {lineCount > 3 ? Math.floor(lineCount / 2) : ''}
+        Lines Drawn: {lineCount > 3 ? Math.floor(lineCount) : ''}
       </div>
 
       {/* Display total expected branches with color indicator */}
